@@ -85,5 +85,19 @@ module SalesEngineWeb
         end
       end
     end
+
+    describe "transactions" do
+      context "given a specific customer" do
+        it "finds the transactions associated with that customer" do
+          Customer.create(:first_name => "Lola May", :last_name => "Drummond")
+          customer = Customer.create(:first_name => "Erin", :last_name => "Drummond")
+          Invoice.create(:customer_id => 2, :merchant_id => 1, :status => "shipped")
+          Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          expect( customer.transactions.count ).to eq 3
+        end
+      end
+    end
   end
 end

@@ -96,7 +96,16 @@ describe "/customers/" do
       end
 
       it "returns a collection of associated transactions" do
-        pending
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped")
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped")
+        SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "super fail")
+        SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        get "/customers/3/transactions"
+        output = JSON.parse(last_response.body)
+        expect( output.count ).to eq 4
+        expect( output[1].values ).to include("super fail")
       end
     end
   end

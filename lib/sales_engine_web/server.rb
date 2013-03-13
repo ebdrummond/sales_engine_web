@@ -1,7 +1,14 @@
 module SalesEngineWeb
   class Server < Sinatra::Base
     
+    # def respond_with(response)
+    #   status response.status
+    #   body response.body
+    # end
+
     get '/merchants/find' do
+      # responde_with MerchantsController.find(params)
+
       status 200
       if params[:id]
         merchant = Merchant.find_by_id(params[:id])
@@ -74,6 +81,13 @@ module SalesEngineWeb
       customer = Customer.find_by_id(id)
       status 200
       body customer.invoices.to_json
+    end
+
+    get '/customers/:id/transactions' do
+      id = params[:id]
+      customer = Customer.find_by_id(id)
+      status 200
+      body customer.transactions.to_json
     end
 
     get '/invoices/find' do

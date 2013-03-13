@@ -73,6 +73,14 @@ module SalesEngineWeb
     def invoices
       Invoice.find_all_by_customer_id(id)
     end
+
+    def invoice_ids
+      invoices.collect{|i| i[:id]}
+    end
+
+    def transactions
+      Transaction.transactions.where(:invoice_id => invoice_ids).to_a
+    end
   end
 end
 
