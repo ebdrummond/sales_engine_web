@@ -104,11 +104,17 @@ describe "/invoice items/" do
   describe "relationships" do
     context "given a specific invoice item" do
       it "returns the associated invoice" do
-        pending
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 4567, :status => "shipped")
+        get "/invoice_items/3/invoice"
+        output = JSON.parse(last_response.body)
+        expect( output.values ).to include(4567)
       end
 
-      it "returns the associated items" do
-        pending
+      it "returns the associated item" do
+        SalesEngineWeb::Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 1)
+        get "/invoice_items/3/item"
+        output = JSON.parse(last_response.body)
+        expect( output.values ).to include("kayak")
       end
     end
   end

@@ -96,5 +96,25 @@ module SalesEngineWeb
         expect( InvoiceItem.random ).to be_kind_of(InvoiceItem)
       end
     end
+
+    describe "invoice" do
+      context "given a specific invoice item" do
+        it "returns the invoice associated with that invoice item" do
+          invoice_item = InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          expect( invoice_item.invoice ).to be_an_instance_of(Invoice)
+        end
+      end
+    end
+
+    describe "item" do
+      context "given a specific invoice item" do
+        it "returns the item associated with that invoice item" do
+          invoice_item = InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+          Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 1)
+          expect( invoice_item.item ).to be_an_instance_of(Item)
+        end
+      end
+    end
   end
 end

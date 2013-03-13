@@ -92,7 +92,7 @@ module SalesEngineWeb
     end
 
     describe "invoice items" do
-      context "given a specifc invoice" do
+      context "given a specific item" do
         it "finds the invoice items associated with that invoice" do
           Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 1)
           item = Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 1)
@@ -100,6 +100,16 @@ module SalesEngineWeb
           InvoiceItem.create(:item_id => 2, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
           InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000)
           expect( item.invoice_items.count ).to eq 2
+        end
+      end
+    end
+
+    describe "merchant" do
+      context "given a specific item" do
+        it "finds the merchant associated with that item" do
+          item = Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 1)
+          Merchant.create(:name => "Jumpstart Lab")
+          expect( item.merchant ).to be_a_kind_of(Merchant)
         end
       end
     end

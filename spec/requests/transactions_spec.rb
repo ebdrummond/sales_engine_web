@@ -89,7 +89,10 @@ describe "/transactions/" do
   describe "relationships" do
     context "given a specific transaction" do
       it "returns the associated invoice" do
-        pending
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shippity ship shipped")
+        get "/transactions/1/invoice"
+        output = JSON.parse(last_response.body)
+        expect( output.values ).to include("shippity ship shipped")
       end
     end
   end

@@ -106,5 +106,25 @@ module SalesEngineWeb
         end
       end
     end
+
+    describe "customer" do
+      context "given a specific invoice" do
+        it "finds the customer associated with that invoice" do
+          invoice = Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          Customer.create(:first_name => "Lola May", :last_name => "Drummond")
+          expect( invoice.customer ).to be_an_instance_of(Customer)
+        end
+      end
+    end
+
+    describe "merchant" do
+      context "given a specific invoice" do
+        it "finds the merchant associated with that invoice" do
+          invoice = Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          Merchant.create(:name => "Jumpstart Lab")
+          expect( invoice.merchant ).to be_an_instance_of(Merchant)
+        end
+      end
+    end
   end
 end

@@ -90,7 +90,16 @@ module SalesEngineWeb
     end
 
     def items
-      invoice_items.collect{|ii| Item.find_by_id(ii.id) }
+      item_ids = invoice_items.collect{|ii| ii[item_id] }
+      item_ids.each{|item_id| Item.find_all_by_id(item_id) }
+    end
+
+    def customer
+      Customer.find_by_id(customer_id)
+    end
+
+    def merchant
+      Merchant.find_by_id(merchant_id)
     end
   end
 end

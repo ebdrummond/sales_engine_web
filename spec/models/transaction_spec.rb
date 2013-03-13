@@ -80,5 +80,15 @@ module SalesEngineWeb
         expect( Transaction.random ).to be_kind_of(Transaction)
       end
     end
+
+    describe "invoice" do
+      context "given a specific transaction" do
+        it "returns the associated invoice" do
+          transaction = Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          expect( transaction.invoice ).to be_kind_of(Invoice)
+        end
+      end
+    end
   end
 end

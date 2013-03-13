@@ -130,6 +130,19 @@ module SalesEngineWeb
       body invoice.items.to_json
     end
 
+    get '/invoices/:id/customer' do
+      id = params[:id]
+      invoice = Invoice.find_by_id(id)
+      status 200
+      body invoice.customer.to_json
+    end
+
+    get '/invoices/:id/merchant' do
+      id = params[:id]
+      invoice = Invoice.find_by_id(id)
+      body invoice.merchant.to_json
+    end
+
     get '/items/find' do
       status 200
       if params[:id]
@@ -174,6 +187,12 @@ module SalesEngineWeb
       body item.invoice_items.to_json
     end
 
+    get '/items/:id/merchant' do
+      id = params[:id]
+      item = Item.find_by_id(id)
+      body item.merchant.to_json
+    end
+
     get '/invoice_items/find' do
       status 200
       if params[:id]
@@ -211,6 +230,20 @@ module SalesEngineWeb
       InvoiceItem.random.to_json
     end
 
+    get '/invoice_items/:id/invoice' do
+      id = params[:id]
+      invoice_item = InvoiceItem.find_by_id(id)
+      status 200
+      body invoice_item.invoice.to_json
+    end
+
+    get '/invoice_items/:id/item' do
+      id = params[:id]
+      invoice_item = InvoiceItem.find_by_id(id)
+      status 200
+      body invoice_item.item.to_json
+    end
+
     get '/transactions/find' do
       status 200
       if params[:id]
@@ -242,6 +275,13 @@ module SalesEngineWeb
     get '/transactions/random' do
       status 200
       Transaction.random.to_json
+    end
+
+    get '/transactions/:id/invoice' do
+      id = params[:id]
+      transaction = Transaction.find_by_id(id)
+      status 200
+      body transaction.invoice.to_json
     end
   end
 end

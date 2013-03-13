@@ -126,8 +126,11 @@ describe "/items/" do
         expect( output.count ).to eq 2
       end
 
-      it "returns a collection of associated merchants" do
-        pending
+      it "returns the associated merchant" do
+        SalesEngineWeb::Merchant.create(:name => "Jumpstart Lab")
+        get "/items/3/merchant"
+        output = JSON.parse(last_response.body)
+        expect( output.values ).to include("Jumpstart Lab")
       end
     end
   end
