@@ -14,5 +14,4 @@ namespace :db do
     SalesEngineWeb::Database.environment = :test
     Sequel::Migrator.run(SalesEngineWeb::Database.database, "db/migrations")
   end
-
 end

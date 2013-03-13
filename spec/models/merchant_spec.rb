@@ -12,13 +12,11 @@ module SalesEngineWeb
     describe '.find' do
       it "finds a merchant" do
         target = Merchant.create(:name => "Jumpstart Lab")
-        found  = Merchant.find( target.id )
+        found  = Merchant.find_by_id( target.id )
         expect( found.id ).to eq target.id
         expect( found.name ).to eq target.name
       end
-    end
 
-    describe '.find_by_name' do
       it "finds a merchant by name" do
         target = Merchant.create(:name => "Jumpstart Lab")
         found  = Merchant.find_by_name("Jumpstart Lab")
@@ -32,6 +30,20 @@ module SalesEngineWeb
         expect( found.id ).to eq target.id
         expect( found.name ).to eq target.name
       end
+
+      it "finds all merchants with a specified id" do
+        target = Merchant.create(:name => "Jumpstart Lab")
+        findings = Merchant.find_all_by_id(1)
+        expect( findings.count ).to eq 1
+        expect( findings).to be_a_kind_of(Array)
+      end
+
+      it "finds all merchants with a specified last name" do
+        target = Merchant.create(:name => "Jumpstart Lab")
+        target2 = Merchant.create(:name => "Jumpstart Lab")
+        findings = Merchant.find_all_by_name("Jumpstart lab")
+        expect( findings.count ).to eq 2
+      end
     end
 
     describe ".random" do
@@ -40,7 +52,5 @@ module SalesEngineWeb
         expect( Merchant.random ).to be_kind_of(Merchant)
       end
     end
-
-    it "implements to_hash"
   end
 end
