@@ -70,11 +70,20 @@ describe "/merchants/" do
   describe "relationships" do
     context "given a specific merchant id" do
       it "returns a collection of items associated with the merchant" do
-        pending
+        SalesEngineWeb::Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 2)
+        SalesEngineWeb::Item.create(:name => "paddle", :description => "Yep, it's a paddle.", :unit_price => 10000, :merchant_id => 2)
+        SalesEngineWeb::Item.create(:name => "sunglasses", :description => "Yep, they're sunglasses.", :unit_price => 1000, :merchant_id => 2)
+        get "/merchants/2/items"
+        output = JSON.parse(last_response.body)
+        expect( output.count ).to eq 3
       end
 
       it "returns a collection of invoices associated with the merchant" do
-        pending
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 3, :status => "shipped")
+        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 3, :status => "shipped")
+        get "/merchants/3/invoices"
+        output = JSON.parse(last_response.body)
+        expect( output.count ).to eq 2
       end
     end
   end

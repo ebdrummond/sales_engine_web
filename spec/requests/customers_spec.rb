@@ -88,7 +88,11 @@ describe "/customers/" do
   describe "relationships" do
     context "given a specific customer" do
       it "returns a collection of associated invoices" do
-        pending
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped")
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped")
+        get "/customers/3/invoices"
+        output = JSON.parse(last_response.body)
+        expect( output.count ).to eq 2
       end
 
       it "returns a collection of associated transactions" do

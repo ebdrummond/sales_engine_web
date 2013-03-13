@@ -10,7 +10,7 @@ module SalesEngineWeb
     end
 
     describe '.find' do
-      it "finds a merchant" do
+      it "finds a merchant by id" do
         target = Merchant.create(:name => "Jumpstart Lab")
         found  = Merchant.find_by_id( target.id )
         expect( found.id ).to eq target.id
@@ -50,6 +50,31 @@ module SalesEngineWeb
       it "returns a merchant" do
         Merchant.create(:name => "Jumpstart Lab")
         expect( Merchant.random ).to be_kind_of(Merchant)
+      end
+    end
+
+    describe "items" do
+      context "given a specific merchant" do
+        it "finds the items associated with that merchant" do
+          Merchant.create(:name => "gSchool")
+          merchant = Merchant.create(:name => "Jumpstart Lab")
+          Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 2)
+          Item.create(:name => "paddle", :description => "Yep, it's a paddle.", :unit_price => 10000, :merchant_id => 2)
+          Item.create(:name => "sunglasses", :description => "Yep, they're sunglasses.", :unit_price => 1000, :merchant_id => 2)
+          expect( merchant.items.count ).to eq 3
+        end
+      end
+    end
+
+    describe "invoices" do
+      context "given a specifc merchant" do
+        it "finds the invoices associated with that merchant" do
+          Merchant.create(:name => "gSchool")
+          merchant = Merchant.create(:name => "Jumpstart Lab")
+          Invoice.create(:customer_id => 1, :merchant_id => 2, :status => "shipped")
+          Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped")
+          expect( merchant.invoices.count ).to eq 2
+        end
       end
     end
   end

@@ -69,6 +69,10 @@ module SalesEngineWeb
     def to_json
       {:id => id, :first_name => first_name, :last_name => last_name}.to_json
     end
+
+    def invoices
+      Invoice.find_all_by_customer_id(id)
+    end
   end
 end
 

@@ -80,5 +80,17 @@ module SalesEngineWeb
     def to_json
       {:id => id, :customer_id => customer_id, :merchant_id => merchant_id, :status => status}.to_json
     end
+
+    def transactions
+      Transaction.find_all_by_invoice_id(id)
+    end
+
+    def invoice_items
+      InvoiceItem.find_all_by_invoice_id(id)
+    end
+
+    def items
+      invoice_items.collect{|ii| Item.find_by_id(ii.id) }
+    end
   end
 end

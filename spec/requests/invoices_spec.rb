@@ -86,15 +86,29 @@ describe "/invoices/" do
   describe "relationships" do
     context "given a specific invoice" do
       it "returns a collection of associated transactions" do
-        pending
+        SalesEngineWeb::Transaction.create(:invoice_id => 4, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 4, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        get "/invoices/4/transactions"
+        output = JSON.parse(last_response.body)
+        expect( output.count ).to eq 2
       end
 
       it "returns a collection of associated invoice items" do
-        pending
+        SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
+        SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
+        get "/invoices/3/invoice_items"
+        output = JSON.parse(last_response.body)
+        expect( output.count ).to eq 2
       end
 
       it "returns a collection of associated items" do
-        pending
+        SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
+        SalesEngineWeb::InvoiceItem.create(:item_id => 2, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
+        SalesEngineWeb::InvoiceItem.create(:item_id => 3, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
+        get "/invoices/3/items"
+        output = JSON.parse(last_response.body)
+        puts output
+        expect( output.count ).to eq 3
       end
 
       it "returns a collection of associated customers" do

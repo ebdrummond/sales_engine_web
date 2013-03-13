@@ -6,7 +6,9 @@ require './lib/sales_engine_web/models/merchant'
 require './lib/sales_engine_web/models/database'
 require './lib/sales_engine_web/models/customer'
 require './lib/sales_engine_web/models/invoice'
-require './lib/sales_engine_web/models/items'
+require './lib/sales_engine_web/models/item'
+require './lib/sales_engine_web/models/invoice_item'
+require './lib/sales_engine_web/models/transaction'
 
 SalesEngineWeb::Database.environment = :test
 

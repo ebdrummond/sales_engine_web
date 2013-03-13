@@ -80,5 +80,31 @@ module SalesEngineWeb
         expect( Invoice.random ).to be_kind_of(Invoice)
       end
     end
+
+    describe "transactions" do
+      context "given a specifc invoice" do
+        it "finds the transactions associated with that invoice" do
+          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          invoice = Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          expect( invoice.transactions.count ).to eq 2
+        end
+      end
+    end
+
+    describe "invoice items" do
+      context "given a specifc invoice" do
+        it "finds the invoice items associated with that invoice" do
+          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          invoice = Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000)
+          InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+          InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000)
+          expect( invoice.invoice_items.count ).to eq 2
+        end
+      end
+    end
   end
 end

@@ -37,6 +37,30 @@ module SalesEngineWeb
       database[:invoices]
     end
 
+    def self.items
+      unless tables.include?(:items)
+        build_items_table
+      end
+
+      database[:items]
+    end
+
+    def self.invoice_items
+      unless tables.include?(:invoice_items)
+        build_invoice_items_table
+      end
+
+      database[:invoice_items]
+    end
+
+    def self.transactions
+      unless tables.include?(:transactions)
+        build_transactions_table
+      end
+
+      database[:transactions]
+    end
+
     def self.tables
       @tables ||= []
     end
@@ -54,6 +78,21 @@ module SalesEngineWeb
     def self.build_invoices_table
       database.
       tables << :invoices
+    end
+
+    def self.build_items_table
+      database.
+      tables << :items
+    end
+
+    def self.build_invoice_items_table
+      database.
+      tables << :invoice_items
+    end
+
+    def self.build_transactions_table
+      database.
+      tables << :transactions
     end
 
     def self.environment=(input)

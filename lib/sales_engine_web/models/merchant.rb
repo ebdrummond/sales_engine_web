@@ -58,5 +58,13 @@ module SalesEngineWeb
     def self.merchants
       Database.merchants
     end
+
+    def items
+      Item.find_all_by_merchant_id(id)
+    end
+
+    def invoices
+      Invoice.find_all_by_merchant_id(id)
+    end
   end
 end

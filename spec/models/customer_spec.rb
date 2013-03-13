@@ -72,5 +72,18 @@ module SalesEngineWeb
         expect( Customer.random ).to be_a_kind_of(Customer)
       end
     end
+
+    describe "invoices" do
+      context "given a specifc customer" do
+        it "finds the invoices associated with that customer" do
+          Customer.create(:first_name => "Lola May", :last_name => "Drummond")
+          customer = Customer.create(:first_name => "Erin", :last_name => "Drummond")
+          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          Invoice.create(:customer_id => 2, :merchant_id => 3, :status => "shipped")
+          Invoice.create(:customer_id => 2, :merchant_id => 1, :status => "shipped")
+          expect( customer.invoices.count ).to eq 2
+        end
+      end
+    end
   end
 end
