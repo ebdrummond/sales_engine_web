@@ -102,14 +102,14 @@ describe "/invoices/" do
       end
 
       it "returns a collection of associated items" do
-        pending
         SalesEngineWeb::Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 1)
-        SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
-        SalesEngineWeb::InvoiceItem.create(:item_id => 2, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
-        SalesEngineWeb::InvoiceItem.create(:item_id => 3, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
-        get "/invoices/3/items"
+        SalesEngineWeb::Item.create(:name => "kayak", :description => "Yep, it's a kayakity yak.", :unit_price => 80000, :merchant_id => 1)
+        SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+        SalesEngineWeb::InvoiceItem.create(:item_id => 2, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+        get "/invoices/1/items"
         output = JSON.parse(last_response.body)
-        expect( output.count ).to eq 3
+        expect( output.count ).to eq 2
+        expect( output[1].values ).to include("Yep, it's a kayakity yak.")
       end
 
       it "returns the associated customer" do

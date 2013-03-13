@@ -90,8 +90,12 @@ module SalesEngineWeb
     end
 
     def items
-      item_ids = invoice_items.collect{|ii| ii[item_id] }
-      item_ids.each{|item_id| Item.find_all_by_id(item_id) }
+      items = []
+      item_ids = invoice_items.collect{|ii| ii[:id] }
+      item_ids.each do |item_id| 
+        items << Item.find_by_id(item_id).to_hash
+      end
+      items
     end
 
     def customer

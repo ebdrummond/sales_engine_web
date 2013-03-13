@@ -107,6 +107,19 @@ module SalesEngineWeb
       end
     end
 
+    describe "items" do
+      context "given a specific invoice" do
+        it "finds the items associated with that invoice" do
+          invoice = Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 1)
+          Item.create(:name => "kayak", :description => "Yep, it's a kayakity yak.", :unit_price => 80000, :merchant_id => 1)
+          InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+          InvoiceItem.create(:item_id => 2, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+          expect( invoice.items.count ).to eq 2
+        end
+      end
+    end
+
     describe "customer" do
       context "given a specific invoice" do
         it "finds the customer associated with that invoice" do
