@@ -36,7 +36,7 @@ module SalesEngineWeb
 
     def self.find_all_by_id(id)
       results = transactions.where(:id => id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_by_invoice_id(invoice_id)
@@ -46,7 +46,7 @@ module SalesEngineWeb
 
     def self.find_all_by_invoice_id(invoice_id)
       results = transactions.where(:invoice_id => invoice_id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_by_credit_card_number(credit_card_number)
@@ -56,7 +56,7 @@ module SalesEngineWeb
 
     def self.find_all_by_credit_card_number(credit_card_number)
       results = transactions.where(:credit_card_number => credit_card_number.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_by_result(result)
@@ -66,7 +66,7 @@ module SalesEngineWeb
 
     def self.find_all_by_result(result)
       results = transactions.where(Sequel.ilike(:result, "%#{result}%")).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def to_json
@@ -84,6 +84,10 @@ module SalesEngineWeb
 
     def invoice
       Invoice.find_by_id(invoice_id)
+    end
+
+    def successful?
+      result == "success"    
     end
   end
 end

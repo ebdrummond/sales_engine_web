@@ -54,22 +54,22 @@ module SalesEngineWeb
 
     def self.find_all_by_id(id)
       results = invoices.where(:id => id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_all_by_customer_id(customer_id)
       results = invoices.where(:customer_id => customer_id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_all_by_merchant_id(merchant_id)
       results = invoices.where(:merchant_id => merchant_id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_all_by_status(status)
       results = invoices.where(Sequel.ilike(:status, "%#{status}%")).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.random
@@ -85,16 +85,28 @@ module SalesEngineWeb
       Transaction.find_all_by_invoice_id(id)
     end
 
+    def paid?
+      transactions.any?{|t| t.successful? }
+    end
+
+    def total
+      if paid?
+        10
+      else
+        0
+      end
+    end
+
     def invoice_items
       InvoiceItem.find_all_by_invoice_id(id)
     end
 
     def item_ids
-      invoice_items.collect{|ii| ii[:item_id]}
+      invoice_items.collect{|ii| ii.item_id}
     end
 
     def items
-      Item.items.where(:id => item_ids).to_a
+      Item.items.where(:id => item_ids)
     end
 
     def customer

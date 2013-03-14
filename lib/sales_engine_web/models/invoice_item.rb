@@ -36,7 +36,7 @@ module SalesEngineWeb
 
     def self.find_all_by_id(id)
       results = invoice_items.where(:id => id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_by_item_id(item_id)
@@ -46,7 +46,7 @@ module SalesEngineWeb
 
     def self.find_all_by_item_id(item_id)
       results = invoice_items.where(:item_id => item_id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_by_invoice_id(invoice_id)
@@ -56,7 +56,7 @@ module SalesEngineWeb
 
     def self.find_all_by_invoice_id(invoice_id)
       results = invoice_items.where(:invoice_id => invoice_id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_by_quantity(quantity)
@@ -66,7 +66,7 @@ module SalesEngineWeb
 
     def self.find_all_by_quantity(quantity)
       results = invoice_items.where(:quantity => quantity.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_by_unit_price(unit_price)
@@ -76,7 +76,7 @@ module SalesEngineWeb
 
     def self.find_all_by_unit_price(unit_price)
       results = invoice_items.where(:unit_price => unit_price.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def to_json

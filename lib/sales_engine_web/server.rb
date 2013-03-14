@@ -1,36 +1,50 @@
 module SalesEngineWeb
   class Server < Sinatra::Base
     
-    # def respond_with(response)
-    #   status response.status
-    #   body response.body
-    # end
+    def respond_with(response)
+      status response.status
+      if success?
+        body response.body
+      else
+        halt
+      end
+    end
 
     get '/merchants/find' do
-      # responde_with MerchantsController.find(params)
+      # merchant = Merchant.find_by_id(params[:id]) || Merchant.find_by_name(params[:name])
+      respond_with MerchantsController.find(params)
 
-      status 200
-      if params[:id]
-        merchant = Merchant.find_by_id(params[:id])
-      else
-        merchant = Merchant.find_by_name(params[:name])
-      end
-      body merchant.to_json
+      # if params[:id]
+      #   merchant = Merchant.find_by_id(params[:id])
+      # else
+      #   merchant = Merchant.find_by_name(params[:name])
+      # end
+
+      # if merchant
+      #   status 200
+      #   body merchant.to_json
+      # else
+      #   status 404
+      #   halt
+      # end
     end
 
     get '/merchants/find_all' do
-      status 200
-      if params[:id]
-        merchants = Merchant.find_all_by_id(params[:id])
-      else
-        merchants = Merchant.find_all_by_name(params[:name])
-      end
-      body merchants.to_json
+      respond_with MerchantsController.find_all(params)
+      
+      # status 200
+      # if params[:id]
+      #   merchants = Merchant.find_all_by_id(params[:id])
+      # else
+      #   merchants = Merchant.find_all_by_name(params[:name])
+      # end
+      # body merchants.to_json
     end
 
     get '/merchants/random' do
-      status 200
-      Merchant.random.to_json
+      respond_with MerchantsController.random
+      # status 200
+      # Merchant.random.to_json
     end
 
     get '/merchants/:id/items' do
@@ -48,6 +62,11 @@ module SalesEngineWeb
     end
 
     get '/customers/find' do
+      #method_name = "find_by_"
+      #figure out if it's id, first_name, or last_name and get that key
+      # key = :id
+      #method_name = "find_by_#{key}" => find_by_id
+      # Customer.send(method_name){params[key]}
       status 200
       if params[:id]
         customer = Customer.find_by_id(params[:id])

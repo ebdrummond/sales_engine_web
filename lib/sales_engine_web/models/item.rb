@@ -60,27 +60,27 @@ module SalesEngineWeb
 
     def self.find_all_by_id(id)
       results = items.where(:id => id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_all_by_name(name)
       results = items.where(Sequel.ilike(:name, "%#{name}%")).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_all_by_description(description)
       results = items.where(Sequel.ilike(:description, "%#{description}%")).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_all_by_unit_price(unit_price)
       results = items.where(:unit_price => unit_price.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_all_by_merchant_id(merchant_id)
       results = items.where(:merchant_id => merchant_id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.random

@@ -33,7 +33,7 @@ module SalesEngineWeb
 
     def self.find_all_by_id(id)
       results = merchants.where(:id => id.to_i).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r) if r}
     end
 
     def self.find_by_name(name)
@@ -43,10 +43,10 @@ module SalesEngineWeb
 
     def self.find_all_by_name(name)
       results = merchants.where(Sequel.ilike(:name, "%#{name}%")).to_a
-      results.each {|r| new(r) if r}
+      results.collect {|r| new(r)}
     end
 
-    def to_json
+    def to_json(*args)
       {:id => id, :name => name}.to_json
     end
 
@@ -65,6 +65,26 @@ module SalesEngineWeb
 
     def invoices
       Invoice.find_all_by_merchant_id(id)
+    end
+
+    def paid_invoices
+      invoices.collect{|i| Invoice.invoices.where(:id => i.id)}
+    end
+
+    def revenue(date = :all)
+      if date == :all
+        calculate_revenue paid_invoices
+      else
+        calculate_revenue paid_invoices_for_date(date)
+      end
+    end
+
+    def paid_invoices_for_date(date)
+      []
+    end
+
+    def calculate_revenue(invoices)
+      invoices.inject(0) {|sum,invoice| sum + invoice.revenue }
     end
   end
 end
