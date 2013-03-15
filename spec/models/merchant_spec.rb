@@ -93,5 +93,21 @@ module SalesEngineWeb
         expect( target2.revenue_for_date("2012-03-25") ).to eq 60000
       end
     end
+
+    describe "pending invoices" do
+      it "returns customers with pending invoices" do
+        Customer.create(:first_name => "Lola May", :last_name => "Drummond")
+        Customer.create(:first_name => "Erin", :last_name => "Drummond")
+        Customer.create(:first_name => "Brock", :last_name => "Drummond")
+        Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 2, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+        Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+        Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        Transaction.create(:invoice_id => 3, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+        expect( target.customers_with_pending_invoices.count ).to eq 2
+      end
+    end
   end
 end

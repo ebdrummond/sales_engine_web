@@ -1,3 +1,5 @@
+require 'date'
+
 module SalesEngineWeb
   class Server < Sinatra::Base
     
@@ -57,6 +59,14 @@ module SalesEngineWeb
       body merchant.invoices.to_json
     end
 
+    get '/merchants/:id/revenue/:date' do
+      id = params[:id]
+      date = Date.parse(params[:date]).strftime("%Y-%m-%d")
+      merchant = Merchant.find_by_id(id)
+      status 200
+      body merchant.revenue_for_date(date).to_s
+    end
+
     get '/merchants/:id/revenue' do
       id = params[:id]
       merchant = Merchant.find_by_id(id)
@@ -64,12 +74,11 @@ module SalesEngineWeb
       body merchant.revenue.to_s
     end
 
-    get '/merchants/:id/revenue/:date' do
+    get '/merchants/:id/customers_with_pending_invoices' do
       id = params[:id]
-      date = params[:date]
       merchant = Merchant.find_by_id(id)
       status 200
-      body merchant.revenue_for_date(date).to_s
+      body merchant.customers_with_pending_invoices.to_json
     end
 
     get '/customers/find' do

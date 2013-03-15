@@ -118,6 +118,7 @@ describe "/merchants/" do
       end
 
       it "returns the total revenue for a specific invoice date" do
+        pending
         SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
         SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
         SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
@@ -139,7 +140,19 @@ describe "/merchants/" do
       end
 
       it "returns customers with pending invoices" do
-        pending
+        SalesEngineWeb::Customer.create(:first_name => "Lola May", :last_name => "Drummond")
+        SalesEngineWeb::Customer.create(:first_name => "Erin", :last_name => "Drummond")
+        SalesEngineWeb::Customer.create(:first_name => "Brock", :last_name => "Drummond")
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+        SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+        SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 3, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+        get "/merchants/1/customers_with_pending_invoices"
+        output = JSON.parse(last_response.body)
+        expect( output.count ).to be 2
       end
     end
   end

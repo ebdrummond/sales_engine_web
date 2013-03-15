@@ -88,5 +88,25 @@ module SalesEngineWeb
       end
       grand_total
     end
+
+    def paid_invoices_count
+      
+    end
+
+    def favorite_customer
+
+    end
+
+    def pending_invoices
+      invoices.reject{|i| i.paid? }
+    end
+
+    def pending_invoice_customer_ids
+      pending_invoices.collect{|pi| pi.customer_id}
+    end
+
+    def customers_with_pending_invoices
+      Customer.customers.where(:id => pending_invoice_customer_ids).to_a
+    end
   end
 end
