@@ -1,14 +1,17 @@
 require './lib/sales_engine_web/models/database'
+require 'date'
 
 module SalesEngineWeb
   class Invoice
     attr_reader :id, :customer_id, :merchant_id, :status
+    attr_accessor :created_at
 
     def initialize(params)
       @id = params[:id]
       @customer_id = params[:customer_id]
       @merchant_id = params[:merchant_id]
       @status = params[:status]
+      @created_at = params[:created_at]
     end
 
     def self.create(params)
@@ -25,7 +28,7 @@ module SalesEngineWeb
     end
 
     def to_hash
-      { :id => id, :customer_id => customer_id, :merchant_id => merchant_id, :status => status }
+      { :id => id, :customer_id => customer_id, :merchant_id => merchant_id, :status => status, :created_at => created_at }
     end
 
     def self.invoices

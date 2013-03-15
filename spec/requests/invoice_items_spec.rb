@@ -104,7 +104,7 @@ describe "/invoice items/" do
   describe "relationships" do
     context "given a specific invoice item" do
       it "returns the associated invoice" do
-        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 4567, :status => "shipped")
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 4567, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
         get "/invoice_items/3/invoice"
         output = JSON.parse(last_response.body)
         expect( output.values ).to include(4567)

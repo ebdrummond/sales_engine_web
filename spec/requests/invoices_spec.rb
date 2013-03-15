@@ -11,10 +11,10 @@ describe "/invoices/" do
     invoice1 && invoice2 && invoice3 && invoice4
   end
 
-  let(:invoice1){ SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped") }
-  let(:invoice2){ SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped") }
-  let(:invoice3){ SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped") }
-  let(:invoice4){ SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped") }
+  let(:invoice1){ SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC") }
+  let(:invoice2){ SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC") }
+  let(:invoice3){ SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC") }
+  let(:invoice4){ SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC") }
 
   describe "find" do
     context "given an existing id" do

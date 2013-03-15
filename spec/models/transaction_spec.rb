@@ -76,7 +76,7 @@ module SalesEngineWeb
     describe "invoice" do
       context "given a specific transaction" do
         it "returns the associated invoice" do
-          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
+          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
           expect( target.invoice ).to be_kind_of(Invoice)
         end
       end

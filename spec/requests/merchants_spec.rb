@@ -79,8 +79,8 @@ describe "/merchants/" do
       end
 
       it "returns a collection of invoices associated with the merchant" do
-        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 3, :status => "shipped")
-        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 3, :status => "shipped")
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 3, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
+        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 3, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
         get "/merchants/3/invoices"
         output = JSON.parse(last_response.body)
         expect( output.count ).to eq 2
@@ -105,8 +105,8 @@ describe "/merchants/" do
 
     context "given a specific merchant" do
       it "returns the total revenue across all transactions" do
-        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped")
-        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped")
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
+        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
         SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000)
         SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000)
         SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
@@ -118,7 +118,20 @@ describe "/merchants/" do
       end
 
       it "returns the total revenue for a specific invoice date" do
-        pending
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000)
+        SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000)
+        SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 1, :unit_price => 10000)
+        SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 3, :quantity => 1, :unit_price => 10000)
+        SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+        SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 3, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        get "/merchants/2/revenue?date=2012-03-25"
+        output = (last_response.body)
+        expect( output ).to eq "60000"
       end
 
       it "returns the customer with the most successful transactions" do

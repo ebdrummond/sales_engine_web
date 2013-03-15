@@ -1,4 +1,6 @@
 require './lib/sales_engine_web/models/database'
+require 'time'
+require 'date'
 
 module SalesEngineWeb
   class Merchant
@@ -71,12 +73,20 @@ module SalesEngineWeb
       if date == :all
         invoices.inject(0){|sum, i| sum + i.total}
       else
-        paid_invoices_for_date(date)
+        revenue_for_date(date)
       end
     end
 
-    def paid_invoices_for_date(date)
-      "fuckkkkk this"
+    def revenue_for_date(date)
+      date = Date.parse(date).strftime("%Y-%m-%d")
+      grand_total = 0
+      invoices.each do |invoice|
+        invoice.created_at = (invoice.created_at).strftime("%Y-%m-%d")
+        if invoice.created_at == date
+            grand_total = grand_total + invoice.total
+        end
+      end
+      grand_total
     end
   end
 end

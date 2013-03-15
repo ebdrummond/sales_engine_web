@@ -88,16 +88,16 @@ describe "/customers/" do
   describe "relationships" do
     context "given a specific customer" do
       it "returns a collection of associated invoices" do
-        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped")
-        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped")
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
         get "/customers/3/invoices"
         output = JSON.parse(last_response.body)
         expect( output.count ).to eq 2
       end
 
       it "returns a collection of associated transactions" do
-        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped")
-        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped")
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
         SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
         SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "super fail")
         SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")

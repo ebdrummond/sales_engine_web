@@ -64,6 +64,14 @@ module SalesEngineWeb
       body merchant.revenue.to_s
     end
 
+    get '/merchants/:id/revenue/:date' do
+      id = params[:id]
+      date = params[:date]
+      merchant = Merchant.find_by_id(id)
+      status 200
+      body merchant.revenue_for_date(date).to_s
+    end
+
     get '/customers/find' do
       status 200
       if params[:id]

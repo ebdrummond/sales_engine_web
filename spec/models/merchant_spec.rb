@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'date'
 
 module SalesEngineWeb
   describe Merchant do
@@ -64,28 +65,32 @@ module SalesEngineWeb
     describe "invoices" do
       context "given a specific merchant" do
         it "finds the invoices associated with that merchant" do
-          Invoice.create(:customer_id => 1, :merchant_id => 2, :status => "shipped")
-          Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped")
+          Invoice.create(:customer_id => 1, :merchant_id => 2, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
+          Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => "2012-03-25 09:54:09 UTC")
           expect( target2.invoices.count ).to eq 2
         end
       end
     end
 
     describe "individual merchant revenue" do
-      let!(:invoice1){ Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped") }
-      let!(:invoice2){ Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped") }
+      let!(:invoice1){ Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d"))) }
+      let!(:invoice2){ Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d"))) }
+      let!(:invoice3){ Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d"))) }
       let!(:invoice_item1){ InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000) }
       let!(:invoice_item2){ InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000) }
+      let!(:invoice_item3){ InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 1, :unit_price => 10000) }
+      let!(:invoice_item4){ InvoiceItem.create(:item_id => 1, :invoice_id => 3, :quantity => 1, :unit_price => 10000) }
       let!(:transaction1){ Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success") }
       let!(:transaction2){ Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed") }
       let!(:transaction3){ Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success") }
+      let!(:transaction4){ Transaction.create(:invoice_id => 3, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success") }
 
       it "calculates revenue for a merchant across all dates" do
-        expect( target2.revenue ).to eq 50000
+        expect( target2.revenue ).to eq 70000
       end
 
       it "calculates revenue a merchant for a specific date" do
-        pending
+        expect( target2.revenue_for_date("2012-03-25") ).to eq 60000
       end
     end
   end
