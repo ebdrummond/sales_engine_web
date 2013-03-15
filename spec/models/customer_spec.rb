@@ -2,15 +2,10 @@ require 'spec_helper'
 
 module SalesEngineWeb
   describe Customer do
-    before do
-      Customer.create(:first_name => "Lola May", :last_name => "Drummond")
-      Customer.create(:first_name => "Lola May", :last_name => "Boland")
-      Customer.create(:first_name => "Erin", :last_name => "Drummond")
-    end
 
-    let(:target1){Customer.find_by_first_name("Lola May")}
-    let(:target2){Customer.find_by_first_name("Lola May")}
-    let(:target3){Customer.find_by_first_name("Erin")}
+    let!(:target1){Customer.create(:first_name => "Lola May", :last_name => "Drummond")}
+    let!(:target2){Customer.create(:first_name => "Lola May", :last_name => "Boland")}
+    let!(:target3){Customer.create(:first_name => "Erin", :last_name => "Drummond")}
 
     describe "create" do
       it "creates a customer" do

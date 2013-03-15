@@ -79,7 +79,7 @@ module SalesEngineWeb
       results.collect {|r| new(r) if r}
     end
 
-    def to_json
+    def to_json(*args)
       {:id => id, :item_id => item_id, :invoice_id => invoice_id, :quantity => quantity, :unit_price => unit_price}.to_json
     end
 
@@ -98,6 +98,10 @@ module SalesEngineWeb
 
     def item
       Item.find_by_id(item_id)
+    end
+
+    def subtotal
+      quantity * unit_price
     end
   end
 end

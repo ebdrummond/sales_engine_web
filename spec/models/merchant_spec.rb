@@ -74,14 +74,18 @@ module SalesEngineWeb
     describe "individual merchant revenue" do
       let!(:invoice1){ Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped") }
       let!(:invoice2){ Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped") }
+      let!(:invoice_item1){ InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000) }
+      let!(:invoice_item2){ InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000) }
       let!(:transaction1){ Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success") }
       let!(:transaction2){ Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed") }
       let!(:transaction3){ Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success") }
-      
-      context "given a specific merchant" do
-        it "finds the paid invoices" do
-          expect( target2.paid_invoices.count ).to eq 1
-        end
+
+      it "calculates revenue for a merchant across all dates" do
+        expect( target2.revenue ).to eq 50000
+      end
+
+      it "calculates revenue a merchant for a specific date" do
+        pending
       end
     end
   end

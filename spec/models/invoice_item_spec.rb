@@ -116,5 +116,14 @@ module SalesEngineWeb
         end
       end
     end
+
+    describe "subtotal" do
+      context "given a specific invoice item" do
+        it "returns the subtotal of unit price times quantity" do
+          target = InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+          expect( target.subtotal ).to eq 50000
+        end
+      end
+    end
   end
 end

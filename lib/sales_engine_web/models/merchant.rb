@@ -67,24 +67,16 @@ module SalesEngineWeb
       Invoice.find_all_by_merchant_id(id)
     end
 
-    def paid_invoices
-      invoices.collect{|i| Invoice.invoices.where(:id => i.id)}
-    end
-
     def revenue(date = :all)
       if date == :all
-        calculate_revenue paid_invoices
+        invoices.inject(0){|sum, i| sum + i.total}
       else
-        calculate_revenue paid_invoices_for_date(date)
+        paid_invoices_for_date(date)
       end
     end
 
     def paid_invoices_for_date(date)
-      []
-    end
-
-    def calculate_revenue(invoices)
-      invoices.inject(0) {|sum,invoice| sum + invoice.revenue }
+      "fuckkkkk this"
     end
   end
 end

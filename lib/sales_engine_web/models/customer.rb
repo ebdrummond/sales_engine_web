@@ -2,42 +2,8 @@ require './lib/sales_engine_web/models/database'
 
 module SalesEngineWeb
 
-  # module HasId
-
-  #   def self.table
-  #     puts "Class Name: #{name} Customer => customers"
-  #     table_name = "#{name.downcase}s"
-  #     Database.send(table_name)
-  #   end
-
-  #   def self.find_by_id(id)
-  #     result = table.where(:id => id.to_i).limit(1).first
-  #     new(result) if result
-  #   end
-    
-  #   def self.find_all_by_id(id)
-  #     results = table.where(:id => id.to_i).to_a
-  #     results.collect {|r| new(r) if r}
-  #   end
-
-  # end
-
-
-
   class Customer
     attr_reader :id, :first_name, :last_name
-
-    # extend HasId
-
-    # def self.attribute(name)
-
-    #   define_singleton_method "find_by_#{name}" do |search_by_id|
-    #     result = table.where(:id => id.to_i).limit(1).first
-    #     new(result) if result
-    #   end
-    # end
-
-    # attribute(:id)
 
     def initialize(params) 
       @id = params[:id]
@@ -101,7 +67,7 @@ module SalesEngineWeb
       new(result) if result
     end
 
-    def to_json
+    def to_json(*args)
       {:id => id, :first_name => first_name, :last_name => last_name}.to_json
     end
 
@@ -114,7 +80,7 @@ module SalesEngineWeb
     end
 
     def transactions
-      Transaction.transactions.where(:invoice_id => invoice_ids)
+      Transaction.transactions.where(:invoice_id => invoice_ids).to_a
     end
   end
 end

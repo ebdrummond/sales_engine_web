@@ -69,7 +69,7 @@ module SalesEngineWeb
       results.collect {|r| new(r) if r}
     end
 
-    def to_json
+    def to_json(*args)
       {:id => id, :invoice_id => invoice_id, :credit_card_number => credit_card_number, :credit_card_expiration_date => credit_card_expiration_date, :result => result}.to_json
     end
 

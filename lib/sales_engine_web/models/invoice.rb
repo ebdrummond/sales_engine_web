@@ -77,7 +77,7 @@ module SalesEngineWeb
       new(result) if result
     end
 
-    def to_json
+    def to_json(*args)
       {:id => id, :customer_id => customer_id, :merchant_id => merchant_id, :status => status}.to_json
     end
 
@@ -91,7 +91,7 @@ module SalesEngineWeb
 
     def total
       if paid?
-        10
+        invoice_items.inject(0){|sum, ii| sum + ii.subtotal}
       else
         0
       end
@@ -106,7 +106,7 @@ module SalesEngineWeb
     end
 
     def items
-      Item.items.where(:id => item_ids)
+      Item.items.where(:id => item_ids).to_a
     end
 
     def customer

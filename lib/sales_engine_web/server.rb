@@ -2,12 +2,8 @@ module SalesEngineWeb
   class Server < Sinatra::Base
     
     def respond_with(response)
-      status response.status
-      if success?
-        body response.body
-      else
-        halt
-      end
+      #status response.status
+      body response.body
     end
 
     get '/merchants/find' do
@@ -61,12 +57,14 @@ module SalesEngineWeb
       body merchant.invoices.to_json
     end
 
+    get '/merchants/:id/revenue' do
+      id = params[:id]
+      merchant = Merchant.find_by_id(id)
+      status 200
+      body merchant.revenue.to_json
+    end
+
     get '/customers/find' do
-      #method_name = "find_by_"
-      #figure out if it's id, first_name, or last_name and get that key
-      # key = :id
-      #method_name = "find_by_#{key}" => find_by_id
-      # Customer.send(method_name){params[key]}
       status 200
       if params[:id]
         customer = Customer.find_by_id(params[:id])

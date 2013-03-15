@@ -99,7 +99,6 @@ module SalesEngineWeb
           InvoiceItem.create(:item_id => 2, :invoice_id => 2, :quantity => 5, :unit_price => 10000)
           InvoiceItem.create(:item_id => 2, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
           InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000)
-          # InvoiceItem.stub(:create).with(params).and_return(stuff)
           expect( item.invoice_items.count ).to eq 2
         end
       end
