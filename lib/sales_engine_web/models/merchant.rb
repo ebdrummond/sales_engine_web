@@ -89,12 +89,26 @@ module SalesEngineWeb
       grand_total
     end
 
-    def paid_invoices_count
-      
+    def paid_invoices
+      invoices.select{|i| i.paid? }
+    end
+
+    def paid_invoices_by_customer_ids
+      paid_invoices_per_customer = Hash.new(0)
+      paid_invoices.inject(paid_invoices_per_customer) do |hash, pi|
+        hash[pi.customer_id] += 1
+        hash
+      end
+      paid_invoices_per_customer
+    end
+
+    def id_of_favorite_customer
+      fav_cust = paid_invoices_by_customer_ids.max_by{|k, v| v}
+      fav_cust[0]
     end
 
     def favorite_customer
-
+      Customer.customers.where(:id => id_of_favorite_customer).to_a
     end
 
     def pending_invoices

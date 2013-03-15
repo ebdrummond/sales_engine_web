@@ -109,5 +109,30 @@ module SalesEngineWeb
         expect( target.customers_with_pending_invoices.count ).to eq 2
       end
     end
+
+    describe "paid invoices" do
+      context "given all invoices" do
+        it "returns a hash of customer ids and number of paid invoices" do
+          Customer.create(:first_name => "Erin", :last_name => "Drummond")
+          Customer.create(:first_name => "Lola May", :last_name => "Drummond")
+          Customer.create(:first_name => "Brock", :last_name => "Boland")
+          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 2, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 3, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 4, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 5, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          expect( target.paid_invoices_by_customer_ids ).to be_kind_of(Hash)
+          expect( target.paid_invoices_by_customer_ids[3] ).to eq 4
+          puts target.favorite_customer
+        end
+      end
+    end
   end
 end

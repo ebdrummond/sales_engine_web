@@ -88,6 +88,19 @@ module SalesEngineWeb
       Transaction.find_all_by_invoice_id(id)
     end
 
+    def paid_invoices
+      invoices.select{|i| i.paid? }
+    end
+
+    def paid_invoices_by_customer_ids
+      paid_invoices_per_customer = Hash.new(0)
+      paid_invoices.inject(paid_invoices_per_customer) do |sum, pi|
+        sum[pi.customer_id] += 1
+        sum
+      end
+      paid_invoices_per_customer
+    end
+
     def paid?
       transactions.any?{|t| t.successful? }
     end
