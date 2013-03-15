@@ -61,7 +61,7 @@ module SalesEngineWeb
       id = params[:id]
       merchant = Merchant.find_by_id(id)
       status 200
-      body merchant.revenue.to_json
+      body merchant.revenue.to_s
     end
 
     get '/customers/find' do
