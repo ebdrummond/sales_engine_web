@@ -91,6 +91,30 @@ describe "/merchants/" do
   describe "business intelligence" do
     it "returns the top X merchants ranked by total revenue" do
       pending
+      SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+      SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+      SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 3, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+      SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+      SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+      SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 3, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 20000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 20000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 3, :quantity => 5, :unit_price => 20000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 4, :quantity => 5, :unit_price => 20000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 5, :quantity => 5, :unit_price => 20000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 6, :quantity => 10, :unit_price => 20000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 6, :quantity => 5, :unit_price => 20000)
+      SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+      SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+      SalesEngineWeb::Transaction.create(:invoice_id => 3, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+      SalesEngineWeb::Transaction.create(:invoice_id => 4, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "failed")
+      SalesEngineWeb::Transaction.create(:invoice_id => 5, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+      SalesEngineWeb::Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+      get "/merchants/most_revenue?quantity=3"
+      output = JSON.parse(last_response.body)
+      expect( output.count ).to eq 3
     end
 
     it "returns the top X merchants ranked by total items sold" do
@@ -153,6 +177,27 @@ describe "/merchants/" do
         get "/merchants/1/customers_with_pending_invoices"
         output = JSON.parse(last_response.body)
         expect( output.count ).to be 2
+      end
+
+      it "returns the favorite customer of that merchant" do
+        SalesEngineWeb::Customer.create(:first_name => "Erin", :last_name => "Drummond")
+        SalesEngineWeb::Customer.create(:first_name => "Lola May", :last_name => "Drummond")
+        SalesEngineWeb::Customer.create(:first_name => "Brock", :last_name => "Boland")
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 3, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 4, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 5, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        get "/merchants/1/favorite_customer"
+        output = JSON.parse(last_response.body)
+        expect( output['first_name'] ).to eq "Brock"
       end
     end
   end

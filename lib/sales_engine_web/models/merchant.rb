@@ -69,6 +69,27 @@ module SalesEngineWeb
       Invoice.find_all_by_merchant_id(id)
     end
 
+    def paid_invoices_by_customer_ids
+      paid_invoices_per_customer = Hash.new(0)
+      paid_invoices.inject(paid_invoices_per_customer) do |hash, pi|
+        hash[pi.customer_id] += 1
+        hash
+      end
+      paid_invoices_per_customer
+    end
+
+    def self.revenue(quantity)
+      revenue_per_customer = Hash.new(0)
+      merchant_revs = merchants.collect{|m| m.revenue }
+      merchant_revs.inject(revenue_per_customer) do |hash, mr|
+        hash[mr.merchant_id] +=
+      end
+      # m = merchants.collect{|m| new(m) }
+      # merchant_revs = m.collect{|m| m.revenue }
+      # merchant_revs.sort.reverse
+      # merchants_by_rev.reverse[0..quantity-1]
+    end
+
     def revenue(date = :all)
       if date == :all
         invoices.inject(0){|sum, i| sum + i.total}
@@ -108,7 +129,7 @@ module SalesEngineWeb
     end
 
     def favorite_customer
-      Customer.customers.where(:id => id_of_favorite_customer).to_a
+      Customer.find_by_id(id_of_favorite_customer)
     end
 
     def pending_invoices

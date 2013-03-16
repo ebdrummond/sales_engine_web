@@ -81,6 +81,19 @@ module SalesEngineWeb
       body merchant.customers_with_pending_invoices.to_json
     end
 
+    get '/merchants/:id/favorite_customer' do
+      id = params[:id]
+      merchant = Merchant.find_by_id(id)
+      status 200
+      body merchant.favorite_customer.to_json
+    end
+
+    get '/merchants/most_revenue' do
+      quantity = params[:quantity]
+      status 200
+      body Merchant.revenue(quantity).to_json
+    end
+
     get '/customers/find' do
       status 200
       if params[:id]

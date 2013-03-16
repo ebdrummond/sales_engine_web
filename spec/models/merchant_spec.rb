@@ -6,7 +6,7 @@ module SalesEngineWeb
 
     let!(:target){ Merchant.create(:name => "Jumpstart Lab") }
     let!(:target2){ Merchant.create(:name => "Jumpstart Lab") }
-
+    let!(:target3){ Merchant.create(:name => "LivingSocial")}
 
     describe '.create' do
       it 'creates a merchant' do
@@ -110,7 +110,7 @@ module SalesEngineWeb
       end
     end
 
-    describe "paid invoices" do
+    describe "favorite customer" do
       context "given all invoices" do
         it "returns a hash of customer ids and number of paid invoices" do
           Customer.create(:first_name => "Erin", :last_name => "Drummond")
@@ -130,8 +130,76 @@ module SalesEngineWeb
           Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
           expect( target.paid_invoices_by_customer_ids ).to be_kind_of(Hash)
           expect( target.paid_invoices_by_customer_ids[3] ).to eq 4
-          puts target.favorite_customer
         end
+
+        it "returns the id of the merchant's favorite customer" do
+          Customer.create(:first_name => "Erin", :last_name => "Drummond")
+          Customer.create(:first_name => "Lola May", :last_name => "Drummond")
+          Customer.create(:first_name => "Brock", :last_name => "Boland")
+          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 2, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 3, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 4, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 5, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          expect( target.id_of_favorite_customer ).to eq 3
+        end
+
+        it "returns the customer instance of the merchant's favorite customer" do
+          Customer.create(:first_name => "Erin", :last_name => "Drummond")
+          Customer.create(:first_name => "Lola May", :last_name => "Drummond")
+          Customer.create(:first_name => "Brock", :last_name => "Boland")
+          Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 2, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+          Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 3, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 4, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 5, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+          expect( target.favorite_customer ).to be_a_kind_of(Customer)
+        end
+      end
+    end
+
+    describe "top x merchants by revenue" do
+      it "returns the top x merchants by revenue" do
+        Invoice.create(:customer_id => 1, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 3, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 4, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 5, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 6, :quantity => 10, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 6, :quantity => 5, :unit_price => 20000)
+        Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+        Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        Transaction.create(:invoice_id => 3, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        Transaction.create(:invoice_id => 4, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "failed")
+        Transaction.create(:invoice_id => 5, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        puts Merchant.revenue(3)
+        puts target1.revenue
+        puts target2.revenue
+        puts target3.revenue
+        expect( Merchant.revenue(2).count ).to eq 2
       end
     end
   end
