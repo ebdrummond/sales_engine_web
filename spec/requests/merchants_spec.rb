@@ -90,7 +90,6 @@ describe "/merchants/" do
 
   describe "business intelligence" do
     it "returns the top X merchants ranked by total revenue" do
-      pending
       SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
       SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
       SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 3, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))

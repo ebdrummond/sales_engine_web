@@ -195,11 +195,7 @@ module SalesEngineWeb
         Transaction.create(:invoice_id => 4, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "failed")
         Transaction.create(:invoice_id => 5, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
         Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
-        puts Merchant.revenue(3)
-        puts target1.revenue
-        puts target2.revenue
-        puts target3.revenue
-        expect( Merchant.revenue(2).count ).to eq 2
+        expect( Merchant.revenue(3).count ).to eq 3
       end
     end
   end

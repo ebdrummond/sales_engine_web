@@ -61,6 +61,11 @@ module SalesEngineWeb
       Database.merchants
     end
 
+    def self.all
+      results = merchants.to_a
+      results.collect{|r| new(r)}
+    end
+
     def items
       Item.find_all_by_merchant_id(id)
     end
@@ -69,25 +74,26 @@ module SalesEngineWeb
       Invoice.find_all_by_merchant_id(id)
     end
 
-    def paid_invoices_by_customer_ids
-      paid_invoices_per_customer = Hash.new(0)
-      paid_invoices.inject(paid_invoices_per_customer) do |hash, pi|
-        hash[pi.customer_id] += 1
+    def self.revenue_per_merchant_id
+      revenue_per_merchant = Hash.new(0)
+      all.inject(revenue_per_merchant) do |hash, m|
+        hash[m.id] += m.revenue
         hash
       end
-      paid_invoices_per_customer
+      revenue_per_merchant
+    end
+
+    def self.sorted_merchants_by_revenue
+      revenue_per_merchant_id.sort {|m1,m2| m2[1]<=>m1[1]}
+    end
+
+    def self.sorted_merchant_ids
+      ids = sorted_merchants_by_revenue.collect{|m| m[0]}
     end
 
     def self.revenue(quantity)
-      revenue_per_customer = Hash.new(0)
-      merchant_revs = merchants.collect{|m| m.revenue }
-      merchant_revs.inject(revenue_per_customer) do |hash, mr|
-        hash[mr.merchant_id] +=
-      end
-      # m = merchants.collect{|m| new(m) }
-      # merchant_revs = m.collect{|m| m.revenue }
-      # merchant_revs.sort.reverse
-      # merchants_by_rev.reverse[0..quantity-1]
+      final = sorted_merchant_ids.collect{|i| merchants.where(:id => i).to_a}
+      final[0..(quantity.to_i)-1]
     end
 
     def revenue(date = :all)
