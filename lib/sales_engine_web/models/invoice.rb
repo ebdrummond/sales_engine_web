@@ -93,11 +93,6 @@ module SalesEngineWeb
       results.collect{|r| new(r)}
     end
 
-    # def paid_invoices
-    #   t = transactions.select{|t| t.successful? }
-
-    # end
-
     def self.paid_invoices_by_customer_ids
       paid_invoices_per_customer = Hash.new(0)
       paid_invoices.inject(paid_invoices_per_customer) do |sum, pi|
@@ -123,13 +118,6 @@ module SalesEngineWeb
       if self.paid?
         self.item_quantity
       end
-
-      # items_per_invoice = Hash.new(0)
-      # paid_invoices.inject(items_per_invoice) do |hash, i|
-      #   hash[i.id] +=i.item_quantity
-      #   hash
-      # end
-      # items_per_invoice
     end
 
     def invoice_items

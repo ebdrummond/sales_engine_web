@@ -147,7 +147,6 @@ module SalesEngineWeb
           Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
           InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
           InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
-          # puts target.valid_items_per_invoice
           expect( target.total ).to eq 100000
         end
       end

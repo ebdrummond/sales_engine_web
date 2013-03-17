@@ -183,10 +183,6 @@ describe "/merchants/" do
         expect( output ).to eq "60000"
       end
 
-      it "returns the customer with the most successful transactions" do
-        pending
-      end
-
       it "returns customers with pending invoices" do
         SalesEngineWeb::Customer.create(:first_name => "Lola May", :last_name => "Drummond")
         SalesEngineWeb::Customer.create(:first_name => "Erin", :last_name => "Drummond")

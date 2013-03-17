@@ -267,6 +267,12 @@ module SalesEngineWeb
       body item.merchant.to_json
     end
 
+    get '/items/most_items' do
+      quantity = params[:quantity]
+      status 200
+      body Item.most_items(quantity).to_json
+    end
+
     get '/invoice_items/find' do
       status 200
       if params[:id]

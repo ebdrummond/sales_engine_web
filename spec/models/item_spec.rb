@@ -113,5 +113,27 @@ module SalesEngineWeb
         end
       end
     end
+
+    describe "invoice" do
+      context "given a specific item" do
+        it "finds the invoices associated with that item" do
+          item = Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 1)
+          item2 = Item.create(:name => "kayak", :description => "Yep, it's a kayak.", :unit_price => 80000, :merchant_id => 1)
+          Invoice.create(:customer_id => 6, :merchant_id => 1, :status => "shipped")
+          Invoice.create(:customer_id => 7, :merchant_id => 1, :status => "shipped")
+          InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+          InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000)
+          Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Invoice.create(:customer_id => 6, :merchant_id => 1, :status => "shipped")
+          Invoice.create(:customer_id => 7, :merchant_id => 1, :status => "shipped")
+          InvoiceItem.create(:item_id => 2, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
+          InvoiceItem.create(:item_id => 2, :invoice_id => 4, :quantity => 50, :unit_price => 10000)
+          Transaction.create(:invoice_id => 3, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+          Transaction.create(:invoice_id => 4, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+          expect( Item.most_items(2).count ).to eq 2
+        end
+      end
+    end
   end
 end

@@ -141,7 +141,22 @@ describe "/items/" do
     end
 
     it "returns the top X items ranked by total number sold" do
-      pending
+      SalesEngineWeb::Invoice.create(:customer_id => 6, :merchant_id => 1, :status => "shipped")
+      SalesEngineWeb::Invoice.create(:customer_id => 7, :merchant_id => 1, :status => "shipped")
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 10000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 10000)
+      SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+      SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+      SalesEngineWeb::Invoice.create(:customer_id => 6, :merchant_id => 1, :status => "shipped")
+      SalesEngineWeb::Invoice.create(:customer_id => 7, :merchant_id => 1, :status => "shipped")
+      SalesEngineWeb::InvoiceItem.create(:item_id => 2, :invoice_id => 3, :quantity => 5, :unit_price => 10000)
+      SalesEngineWeb::InvoiceItem.create(:item_id => 2, :invoice_id => 4, :quantity => 50, :unit_price => 10000)
+      SalesEngineWeb::Transaction.create(:invoice_id => 3, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+      SalesEngineWeb::Transaction.create(:invoice_id => 4, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+      get "/items/most_items?quantity=3"
+      output = JSON.parse(last_response.body)
+      expect( output.count ).to eq 3
+      expect( output[0]['id'] ).to eq 2
     end
 
     context "given a specific date" do

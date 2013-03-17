@@ -99,5 +99,33 @@ module SalesEngineWeb
     def merchant
       Merchant.find_by_id(merchant_id)
     end
+
+    def self.all
+      results = items.to_a
+      results.collect{|r| new(r)}
+    end
+
+    def invoices
+      invoice_items.collect{|ii| ii.invoice}
+    end
+
+    def paid_invoices
+      invoices.select{|i| i.paid? }
+    end
+
+    def total_sold
+      total = 0
+      invoice_items.each do |ii|
+        if ii.invoice.paid?
+          total = total + ii.quantity
+        end
+      end
+      total
+    end
+
+    def self.most_items(quantity)
+      best_sellers = all.sort_by{|i| i.total_sold}
+      best_sellers.reverse[0..(quantity.to_i)-1]
+    end
   end
 end
