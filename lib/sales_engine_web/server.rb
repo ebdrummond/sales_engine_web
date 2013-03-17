@@ -143,6 +143,13 @@ module SalesEngineWeb
       body customer.transactions.to_json
     end
 
+    get '/customers/:id/favorite_merchant' do
+      id = params[:id]
+      customer = Customer.find_by_id(id)
+      status 200
+      body customer.favorite_merchant.to_json
+    end
+
     get '/invoices/find' do
       status 200
       if params[:id]

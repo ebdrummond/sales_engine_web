@@ -113,7 +113,24 @@ describe "/customers/" do
   describe "business intelligence" do
     context "given a specific customer" do
       it "returns a merchant where the customer has conducted the most successful transactions" do
-        pending
+        SalesEngineWeb::Merchant.create(:name => "Jumpstart Lab")
+        SalesEngineWeb::Merchant.create(:name => "gSchool")
+        SalesEngineWeb::Merchant.create(:name => "Galvanize")
+        SalesEngineWeb::Invoice.create(:customer_id => 1, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 2, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 1, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 3, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Invoice.create(:customer_id => 3, :merchant_id => 3, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        SalesEngineWeb::Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 3, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 4, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "failed")
+        SalesEngineWeb::Transaction.create(:invoice_id => 5, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        SalesEngineWeb::Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        get "/customers/3/favorite_merchant"
+        output = JSON.parse(last_response.body)
+        expect( output['name'] ).to eq "Galvanize"
       end
     end
   end

@@ -82,6 +82,28 @@ module SalesEngineWeb
     def transactions
       Transaction.transactions.where(:invoice_id => invoice_ids).to_a
     end
+
+    def paid_invoices
+      invoices.select{|i| i.paid? }
+    end
+
+    def paid_invoices_by_merchant_ids
+      paid_invoices_per_merchant = Hash.new(0)
+      paid_invoices.inject(paid_invoices_per_merchant) do |hash, pi|
+        hash[pi.merchant_id] += 1
+        hash
+      end
+      paid_invoices_per_merchant
+    end
+
+    def id_of_favorite_merchant
+      fav_merch = paid_invoices_by_merchant_ids.max_by{|k, v| v}
+      fav_merch[0]
+    end
+
+    def favorite_merchant
+      Merchant.find_by_id(id_of_favorite_merchant)
+    end
   end
 end
 
