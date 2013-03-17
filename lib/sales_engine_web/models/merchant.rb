@@ -96,6 +96,32 @@ module SalesEngineWeb
       final[0..(quantity.to_i)-1]
     end
 
+    def items_per_invoice_id
+      invoices.inject(0){|sum, i| sum + (i.valid_items_per_invoice || 0)}
+    end
+
+    def self.items_per_merchant_id
+      items_per_merchant = Hash.new(0)
+      all.inject(items_per_merchant) do |hash, m|
+        hash[m.id] += m.items_per_invoice_id
+        hash
+      end
+      items_per_merchant
+    end
+
+    def self.sorted_merchants_by_items
+      items_per_merchant_id.sort {|m1,m2| m2[1]<=>m1[1]}
+    end
+
+    def self.sorted_merchant_ids_items
+      ids = sorted_merchants_by_items.collect{|m| m[0]}
+    end
+
+    def self.most_items(quantity)
+      final = sorted_merchant_ids_items.collect{|i| merchants.where(:id => i).to_a}
+      final[0..(quantity.to_i)-1]
+    end
+
     def revenue(date = :all)
       if date == :all
         invoices.inject(0){|sum, i| sum + i.total}

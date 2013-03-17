@@ -88,11 +88,17 @@ module SalesEngineWeb
       Transaction.find_all_by_invoice_id(id)
     end
 
-    def paid_invoices
-      invoices.select{|i| i.paid? }
+    def self.all
+      results = invoices.to_a
+      results.collect{|r| new(r)}
     end
 
-    def paid_invoices_by_customer_ids
+    # def paid_invoices
+    #   t = transactions.select{|t| t.successful? }
+
+    # end
+
+    def self.paid_invoices_by_customer_ids
       paid_invoices_per_customer = Hash.new(0)
       paid_invoices.inject(paid_invoices_per_customer) do |sum, pi|
         sum[pi.customer_id] += 1
@@ -113,8 +119,25 @@ module SalesEngineWeb
       end
     end
 
+    def valid_items_per_invoice
+      if self.paid?
+        self.item_quantity
+      end
+
+      # items_per_invoice = Hash.new(0)
+      # paid_invoices.inject(items_per_invoice) do |hash, i|
+      #   hash[i.id] +=i.item_quantity
+      #   hash
+      # end
+      # items_per_invoice
+    end
+
     def invoice_items
       InvoiceItem.find_all_by_invoice_id(id)
+    end
+
+    def item_quantity
+      invoice_items.inject(0){|sum, ii| sum + ii.quantity}
     end
 
     def item_ids

@@ -198,5 +198,32 @@ module SalesEngineWeb
         expect( Merchant.revenue(3).count ).to eq 3
       end
     end
+
+    describe "top x merchants by items sold" do
+      it "returns the top x merchants by items sold" do
+        Invoice.create(:customer_id => 1, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 2, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-25 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        Invoice.create(:customer_id => 3, :merchant_id => 2, :status => "shipped", :created_at => (Date.parse("2012-03-24 09:54:09 UTC").strftime("%Y-%m-%d")))
+        InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 1, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 2, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 3, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 4, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 5, :quantity => 5, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 6, :quantity => 10, :unit_price => 20000)
+        InvoiceItem.create(:item_id => 1, :invoice_id => 6, :quantity => 5, :unit_price => 20000)
+        Transaction.create(:invoice_id => 1, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "failed")
+        Transaction.create(:invoice_id => 2, :credit_card_number => 4444444444444444, :credit_card_expiration_date => "", :result => "success")
+        Transaction.create(:invoice_id => 3, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        Transaction.create(:invoice_id => 4, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "failed")
+        Transaction.create(:invoice_id => 5, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        Transaction.create(:invoice_id => 6, :credit_card_number => 5555555555555555, :credit_card_expiration_date => "", :result => "success")
+        expect( Merchant.most_items(3).count ).to eq 3
+      end
+    end
   end
 end

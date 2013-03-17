@@ -94,6 +94,12 @@ module SalesEngineWeb
       body Merchant.revenue(quantity).to_json
     end
 
+    get '/merchants/most_items' do
+      quantity = params[:quantity]
+      status 200
+      body Merchant.revenue(quantity).to_json
+    end
+
     get '/customers/find' do
       status 200
       if params[:id]
